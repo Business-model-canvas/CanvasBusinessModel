@@ -23,6 +23,12 @@ module.exports = {
       order: {
         type: Sequelize.INTEGER
       },
+      color: {
+        type: Sequelize.STRING
+      },
+      size: {
+        type: Sequelize.INTEGER
+      },
       coordinate_x: {
         type: Sequelize.INTEGER
       },
