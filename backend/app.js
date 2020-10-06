@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+const http = require("http");
+const socketIo = require("socket.io");
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var port = 8080;
@@ -39,6 +41,35 @@ app.get('/', function(req, res){
     res.send('tes express nodejs mysql')
 });
 
-app.listen(port, function(){
+// socket.io
+const server = http.createServer(app);
+const io = socketIo(server);
+
+io.on('connect', (socket) => {
+    console.log('socket connected');
+    socket.on('join', ({ name, room }, callback) => {
+        console.log('New user joined.');
+  
+    });
+  
+    socket.on('sendMessage', (message, callback) => {
+        console.log('New message arrived. ', message);
+        socket.broadcast.emit('refresh');
+        socket.emit('refresh');
+    });
+
+    socket.on('reload_placeholders', ()=>{
+        socket.broadcast.emit('reload');
+        // socket.emit('reload');
+    })
+  
+    socket.on('disconnect', () => {
+        console.log('Socket has been disconnected.');
+    })
+  });
+
+
+server.listen(port, function(){
     console.log('app listening on port: '+port);
 });
+

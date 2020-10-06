@@ -1,5 +1,7 @@
 var express = require('express');
 var User = require('../models').User;
+var Canvas = require('../models').Canvas;
+var Placeholder = require('../models').Placeholder;
 var router = express.Router();
 const sendEmail = require("../libs/sendEmail")
 const messages = require("../libs/messages")
@@ -96,6 +98,105 @@ router.post(
                         });
                     });
         })(req,res,next)
+})
+
+router.post('/canvas/create/', (req, res) => {
+    Canvas.create(req.body).then(data=>{
+        res.send(data);
+    }).catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the Tutorial."
+        });
+      });
+    // return res.status(200).json(req.body);
+})
+
+router.post('/canvas/read_all/', (req, res) => {
+    Canvas.findAll().then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving canvases."
+        });
+      });
+})
+
+router.post('/canvas/read_data', (req, res) => {
+    const id = req.body.id;
+    // res.send(id)
+
+    Placeholder.findAll({where: {
+        canvas_id: id
+    }}).then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving canvases."
+        });
+      });
+})
+
+router.post('/canvas/update_data', async (req, res) => {
+    var data = req.body.data;
+    const id = req.body.id;
+
+    // data.forEach(async item=>{
+    //     await Placeholder.update(item, {where: {id: item.id}});
+    // })
+    for(var i=0; i<data.length; i++){
+        await Placeholder.update(data[i], {where: {id: data[i].id}})
+    }
+
+    Placeholder.findAll({where: {
+        canvas_id: id
+    }}).then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving canvases."
+        });
+      });
+})
+
+router.post('/canvas/delete_data', async (req, res) => {
+    var data = req.body.data;
+    const id = req.body.id;
+
+    // data.forEach(async item=>{
+    //     await Placeholder.update(item, {where: {id: item.id}});
+    // })
+    await Placeholder.destroy({where: {id: data.id}})
+
+    Placeholder.findAll({where: {
+        canvas_id: id
+    }}).then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving canvases."
+        });
+      });
+})
+
+router.post('/canvas/create_placeholder', (req, res) => {
+    Placeholder.create(req.body).then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving canvases."
+        });
+      });
 })
 // router.get('/:id', function(req, res){
 //     console.log('getting one book');

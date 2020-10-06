@@ -23,7 +23,8 @@
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "sequelize": "^4.32.6"
+    "sequelize": "^4.32.6",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.2.0"

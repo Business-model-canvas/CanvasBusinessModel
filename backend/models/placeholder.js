@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Placeholder.belongsTo(models.Canvas, {
-        foreignKey: 'canvasId',
-        onDelete: 'CASCADE'
-      })
+      // Placeholder.belongsTo(models.Canvas, {
+      //   foreignKey: 'canvasId',
+      //   onDelete: 'CASCADE'
+      // })
     }
   };
   Placeholder.init({
@@ -24,7 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     order: DataTypes.INTEGER,
     coordinate_x: DataTypes.INTEGER,
     coordinate_y: DataTypes.INTEGER,
-    canvasId: DataTypes.INTEGER
+    canvas_id: DataTypes.INTEGER,
+    color: DataTypes.STRING,
+    size: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Placeholder',

@@ -1,4 +1,12 @@
+// canvas
 export const CREATE_CANVAS = "CREATE_CANVAS";
+export const READ_CANVAS = "READ_CANVAS";
+export const CUR_CANVAS_ID = "CUR_CANVAS_ID";
+export const READ_PLACEHOLDER = "READ_PLACEHOLDER";
+export const CREATE_PLACEHOLDER = "CREATE_PLACEHOLDER";
+export const SET_PLACEHOLDERS = "SET_PLACEHOLDERS";
+
+// auth
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";

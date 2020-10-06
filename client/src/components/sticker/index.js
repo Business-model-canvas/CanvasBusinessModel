@@ -20,13 +20,13 @@ import {
 
 const Sticker = (props) => {
   const [border, setBorder] = useState("");
-  const [background, setBackColor] = useState("#fbea70");
+  const [background, setBackColor] = useState(props.color);
   const [isEditing, setEditing] = useState(props.isEditing);
   const [showMenu, setShowMenu] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
-  const [size, setSize] = useState(3);
-  const [isLocked, setLocked] = useState(false);
+  // const [size, setSize] = useState(props.size);
+  // const [isLocked, setLocked] = useState(props.isLocked);
   const [content, setContent] = useState(props.data);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [description, setDescription] = useState("");
@@ -67,15 +67,15 @@ const Sticker = (props) => {
       position={{ x: props.x, y: props.y }}
       grid={[25, 25]}
       scale={1}
-      disabled={isLocked ? true : isEditing ? true : false}
+      disabled={props.isLocked ? true : isEditing ? true : false}
       bounds="parent"
       onStart={handleStart}
       onDrag={handleDrag}
       onStop={handleStop}
     >
       <Container
-        width={20 * size}
-        height={20 * size}
+        width={20 * props.size}
+        height={20 * props.size}
         background={background}
         style={{ zIndex: props.order, position: "relative" }}
         border={border}
@@ -85,7 +85,7 @@ const Sticker = (props) => {
         }}
         onContextMenu={(e) => {
           console.log("right clicked");
-          if (isLocked) {
+          if (props.isLocked) {
             setShowUnlockMenu(true);
           } else {
             setShowDetail(true);
@@ -95,7 +95,7 @@ const Sticker = (props) => {
         }}
         onDoubleClick={(e) => {
           e.stopPropagation();
-          if (!isLocked) {
+          if (!props.isLocked) {
             setEditing(true);
             var interval = setInterval(() => {
               if (textRef) {
@@ -119,11 +119,11 @@ const Sticker = (props) => {
           }
         }}
       >
-        <MenuBar display={showUnlockMenu && isLocked ? "flex" : "none"}>
+        <MenuBar display={showUnlockMenu && props.isLocked ? "flex" : "none"}>
           <MenuItem>
             <p
               onClick={() => {
-                setLocked(false);
+                props.setLocked(props.id, false);
               }}
               style={{ color: "#1196f1" }}
             >
@@ -173,6 +173,7 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#fbea70");
               setShowColorPicker(false);
+              props.setColor(props.id, '#fbea70');
             }}
           />
           <ColorItem
@@ -180,6 +181,7 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#ffcd83");
               setShowColorPicker(false);
+              props.setColor(props.id, '#ffcd83');
             }}
           />
           <ColorItem
@@ -187,6 +189,7 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#ffb9ba");
               setShowColorPicker(false);
+              props.setColor(props.id, '#ffb9ba');
             }}
           />
           <ColorItem
@@ -194,6 +197,7 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#fec9fa");
               setShowColorPicker(false);
+              props.setColor(props.id, '#fec9fa');
             }}
           />
           <ColorItem
@@ -201,6 +205,7 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#8fe7fe");
               setShowColorPicker(false);
+              props.setColor(props.id, '#8fe7fe');
             }}
           />
           <ColorItem
@@ -208,6 +213,7 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#ccee9d");
               setShowColorPicker(false);
+              props.setColor(props.id, '#ccee9d');
             }}
           />
           <ColorItem
@@ -215,51 +221,52 @@ const Sticker = (props) => {
             onClick={() => {
               setBackColor("#d8dadc");
               setShowColorPicker(false);
+              props.setColor(props.id, '#d8dadc');
             }}
           />
         </ColorPickerModalContainer>
         <DetailContainer display={showDetail ? "flex" : "none"}>
           <DetailItem>
             <SizeItem
-              active={size === 1}
+              active={props.size === 1}
               onClick={() => {
-                setSize(1);
+                props.setSize(props.id, 1);
                 setShowDetail(false);
               }}
             >
               XS
             </SizeItem>
             <SizeItem
-              active={size === 2}
+              active={props.size === 2}
               onClick={() => {
-                setSize(2);
+                props.setSize(props.id, 2);
                 setShowDetail(false);
               }}
             >
               S
             </SizeItem>
             <SizeItem
-              active={size === 3}
+              active={props.size === 3}
               onClick={() => {
-                setSize(3);
+                props.setSize(props.id, 3);
                 setShowDetail(false);
               }}
             >
               M
             </SizeItem>
             <SizeItem
-              active={size === 4}
+              active={props.size === 4}
               onClick={() => {
-                setSize(4);
+                props.setSize(props.id, 4);
                 setShowDetail(false);
               }}
             >
               L
             </SizeItem>
             <SizeItem
-              active={size === 5}
+              active={props.size === 5}
               onClick={() => {
-                setSize(5);
+                props.setSize(props.id, 5);
                 setShowDetail(false);
               }}
             >
@@ -269,7 +276,7 @@ const Sticker = (props) => {
           <Spliter />
           <DetailItem
             onClick={() => {
-              setLocked(true);
+              props.setLocked(props.id, true);
               setShowMenu(false);
               setShowDetail(false);
             }}
@@ -330,9 +337,9 @@ const Sticker = (props) => {
             defaultValue={content}
             onChange={(event) => {
               setContent(event.target.value);
-              props.setData(props.id, event.target.value);
             }}
             onBlur={() => {
+              props.setData(props.id, content);
               setEditing(false);
             }}
           />

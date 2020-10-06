@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Canvas.hasMany(models.Placeholder, {
-        foreignKey: 'canvasId',
-      })
+      // Canvas.hasMany(models.Placeholder, {
+      //   foreignKey: 'canvasId',
+      // })
     }
   };
   Canvas.init({
     name: DataTypes.STRING,
-    description: DataTypes.STRING
+    type: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Canvas',

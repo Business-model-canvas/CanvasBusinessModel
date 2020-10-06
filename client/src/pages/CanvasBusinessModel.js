@@ -4,6 +4,9 @@ import MyComponent from "../components/container";
 import Sticker from "../components/sticker";
 import styled from "styled-components";
 
+import {connect} from "react-redux";
+import {createPlaceholder, deletePlaceholder, readCurCanvasData, setPlaceholders} from "../store/action"
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,14 +31,24 @@ const ColumnContainer = styled.div`
   flex-direction: column;
 `;
 
-const CanvasBusinessModel = () => {
-  const [stickers, setStickers] = useState([]);
+const CanvasBusinessModel = ({
+  socket,
+  canvas_data, 
+  cur_canvas_id, 
+  readCurCanvasData, 
+  createPlaceholder, 
+  setPlaceholders, 
+  deletePlaceholder
+}) => {
+  // const [stickers, setStickers] = useState(canvas_data);
   const [cnt, setCnt] = useState(1);
   const [offset, setOffset] = useState();
+  const [curEditing, setCurEditing] = useState(-1);
   const parentRef = useRef(null);
 
-  const duplicate = (x, y, data = "", isEditing = true) => {
-    var tmp = [...stickers];
+  const duplicate = async (x, y, data = "", isEditing = true) => {
+    console.log('stickers = ', canvas_data);
+    var tmp = [...canvas_data];
     setCnt(cnt + 1);
     var maxOrder = 0;
     tmp.forEach((item) => {
@@ -43,18 +56,35 @@ const CanvasBusinessModel = () => {
         maxOrder = item.order;
       }
     });
-    tmp.push({
-      x: x,
-      y: y - 10 * (stickers.length - 1),
-      data: data,
-      isEditing: isEditing,
+
+    setCurEditing(canvas_data.length);
+
+    console.log('*** cur_canvas_id = ', cur_canvas_id);
+    await createPlaceholder({
+      canvas_id: cur_canvas_id,
+      coordinate_x: x,
+      coordinate_y: y - 10 * (canvas_data.length - 1),
+      name: data,
+      color: '#fbea70',
+      size: 3,
+      lock: false,
+      isEditing: true,
       order: maxOrder + 1
     });
-    setStickers(tmp);
+
+    // socket.emit('reload_placeholders');
+    // tmp.push({
+    //   x: x,
+    //   y: y - 10 * (stickers.length - 1),
+    //   data: data,
+    //   isEditing: isEditing,
+    //   order: maxOrder + 1
+    // });
+    // setStickers(tmp);
   };
 
   const setOrder = (index) => {
-    var tmp = [...stickers];
+    var tmp = [...canvas_data];
     console.log("stickers = ", tmp);
     var maxOrder = 0;
     tmp.forEach((item) => {
@@ -64,35 +94,67 @@ const CanvasBusinessModel = () => {
     });
     console.log("maxOrder = ", maxOrder);
     tmp[index]["order"] = maxOrder + 1;
-    setStickers(tmp);
+    setPlaceholders({data: tmp, id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
+
   };
 
-  const deleteItem = (item) => {
-    console.log(item);
-    var tmp = [...stickers];
-    tmp.splice(item, 1);
-    setStickers(tmp);
+  const deleteItem = (index) => {
+    deletePlaceholder({data: canvas_data[index], id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
   };
 
   const setData = (index, data) => {
-    var tmp = [...stickers];
-    tmp[index]["data"] = data;
-    setStickers(tmp);
+    var tmp = [...canvas_data];
+    tmp[index]["name"] = data;
+    setPlaceholders({data: tmp, id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
+  };
+
+  const setColor = (index, color) => {
+    var tmp = [...canvas_data];
+    tmp[index]["color"] = color;
+    setPlaceholders({data: tmp, id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
+  };
+
+  const setSize = (index, size) => {
+    var tmp = [...canvas_data];
+    tmp[index]["size"] = size;
+    setPlaceholders({data: tmp, id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
+  };
+
+  const setLock = (index, lock) => {
+    var tmp = [...canvas_data];
+    tmp[index]["lock"] = lock;
+    setPlaceholders({data: tmp, id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
   };
 
   const changePosition = (index, x, y) => {
-    var tmp = [...stickers];
+    var tmp = [...canvas_data];
     const width = parentRef.current.offsetWidth;
     const height = parentRef.current.offsetHeight;
-    tmp[index].x = Math.min(Math.max(0, x), width - 80);
-    tmp[index].y = Math.min(Math.max(100, y), height + 20);
-    setStickers(tmp);
+    tmp[index].coordinate_x = Math.min(Math.max(0, x), width - 80);
+    tmp[index].coordinate_y = Math.min(Math.max(100, y), height + 20);
+    setPlaceholders({data: tmp, id: cur_canvas_id});
+    // socket.emit('reload_placeholders');
   };
+
+  useEffect(()=>{
+    console.log('cur_canvas_id = ', cur_canvas_id);
+    readCurCanvasData({id: cur_canvas_id})
+    socket.on('reload', ()=>{
+      readCurCanvasData({id: cur_canvas_id});
+    })
+  }, []);
 
   useEffect(() => {
     console.log("parent = ", parentRef.current.getBoundingClientRect());
     const boundRect = parentRef.current.getBoundingClientRect();
     setOffset({ x: boundRect.x, y: boundRect.y });
+    // socket.emit('reload_placeholders');
   }, [parentRef]);
 
   return (
@@ -157,14 +219,20 @@ const CanvasBusinessModel = () => {
           height: "90vh"
         }}
       >
-        {stickers.map((item, index) => {
+        {canvas_data && canvas_data.map((item, index) => {
           return (
             <Sticker
-              x={item.x}
-              y={item.y - (index + 1) * 70 - 30}
-              data={item.data}
+              x={item.coordinate_x}
+              y={item.coordinate_y - (index + 1) * 70 - 30}
+              data={item.name}
               setData={setData}
-              isEditing={item.isEditing}
+              color={item.color}
+              setColor={setColor}
+              size={item.size}
+              setSize={setSize}
+              isLocked={item.lock}
+              setLocked={setLock}
+              isEditing={index == curEditing ? true : false}
               order={item.order}
               setOrder={setOrder}
               offset={offset}
@@ -187,4 +255,16 @@ const styles = {
   }
 };
 
-export default CanvasBusinessModel
+const mapStateToProps = (state, ownProps) => ({
+  canvas_data: state.canvas.canvas_data,
+  cur_canvas_id: state.canvas.cur_canvas_id,
+  socket: state.canvas.socket
+})
+const mapDispatchToProps = dispatch => ({
+  createPlaceholder: createPlaceholder(dispatch),
+  readCurCanvasData: readCurCanvasData(dispatch),
+  setPlaceholders: setPlaceholders(dispatch),
+  deletePlaceholder: deletePlaceholder(dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CanvasBusinessModel);

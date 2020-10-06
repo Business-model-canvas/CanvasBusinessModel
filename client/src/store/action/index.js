@@ -4,17 +4,110 @@ import * as actionTypes from "./actiontypes";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../../utils/setAuthToken"
 
-export const createCanvas = dispatch => () => {
+import store from '../index';
+
+export const createCanvas = dispatch => (data) => {
 	axios
-	.post(`${SERVER_PORT}/apis/canvas/create/`)
+	.post(`${SERVER_PORT}/apis/canvas/create/`, data)
 	.then(res=>{
 		dispatch({
 			type: actionTypes.CREATE_CANVAS,
+			payload: res.data
+        })
+        dispatch({
+            type: actionTypes.SET_PLACEHOLDERS,
+            payload: []
+        })
+	})
+	.catch(err=> console.log(err))
+}
+
+export const readCanvas = dispatch => () => {
+    axios
+	.post(`${SERVER_PORT}/apis/canvas/read_all/`)
+	.then(res=>{
+        console.log('canvas = ', res.data);
+		dispatch({
+			type: actionTypes.READ_CANVAS,
+			payload: res.data
+        });
+        dispatch({
+            type: actionTypes.CUR_CANVAS_ID,
+            payload: res.data[0].id
+        })
+	})
+	.catch(err=> console.log(err))
+}
+
+export const readCurCanvasData = dispatch => (data) => {
+    console.log('data = ', data);
+    axios
+    .post(`${SERVER_PORT}/apis/canvas/read_data`, data)
+	.then(res=>{
+        console.log('canvas data = ', res.data);
+        res.data.forEach(item => {
+            item.isEditing = false;
+        })
+        dispatch({
+            type: actionTypes.CUR_CANVAS_ID,
+            payload: data.id
+        })
+		dispatch({
+			type: actionTypes.READ_PLACEHOLDER,
+			payload: res.data
+        });
+	})
+	.catch(err=> console.log(err))
+}
+
+export const setPlaceholders = dispatch => (data) => {
+    const state = store.getState();
+    axios
+    .post(`${SERVER_PORT}/apis/canvas/update_data`, data)
+    .then(res=>{
+        dispatch({
+            type: actionTypes.SET_PLACEHOLDERS,
+            payload: res.data
+        })
+        state.canvas.socket.emit("reload_placeholders");
+    })
+    .catch(err=>console.log(err))
+    
+}
+
+export const deletePlaceholder = dispatch => (data) => {
+    axios
+    .post(`${SERVER_PORT}/apis/canvas/delete_data`, data)
+    .then(res=>{
+        dispatch({
+            type: actionTypes.SET_PLACEHOLDERS,
+            payload: res.data
+        })
+    })
+    .catch(err=>console.log(err))
+}
+
+export const setCurCanvas = dispatch => (data) => {
+    console.log('set cur canvas id = ', data);
+    dispatch({
+        type: actionTypes.CUR_CANVAS_ID,
+        payload: data
+    })
+}
+
+export const createPlaceholder = dispatch => (data) => {
+    console.log('*** canvas data = ', data);
+    axios
+	.post(`${SERVER_PORT}/apis/canvas/create_placeholder/`, data)
+	.then(res=>{
+		dispatch({
+			type: actionTypes.CREATE_PLACEHOLDER,
 			payload: res.data
 		})
 	})
 	.catch(err=> console.log(err))
 }
+
 export const signupUser = dispatch => async (postData) => {
         console.log("action call", postData)
         await axios

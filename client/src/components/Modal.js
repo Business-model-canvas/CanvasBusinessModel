@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {ModelContent, FromGroup, Label, Input, ErrSpan, Select, BtnSection, CancelBtn, CreateBtn, Option} from "../elements/Modal";
 
-const SimpleModal = ({open, setOpen, history, createCanvas}) => {
+const SimpleModal = ({socket, open, setOpen, history, createCanvas}) => {
 	const [formVal, setFormVal] = React.useState({
 		name: "",
 		type: ""
@@ -39,8 +39,9 @@ const SimpleModal = ({open, setOpen, history, createCanvas}) => {
 	    } else {
 	    	console.log(formVal);
 	    	console.log("---", history, typeof history)
-	    	history.push(`/canvas${formVal.type}/${formVal.name}`)
-	    	// createCanvas(formVal);
+			history.push(`/canvas${formVal.type}/${formVal.name}`)
+			socket.emit('sendMessage', 'Message');
+	    	createCanvas(formVal);
 	    }
 	}
 	return (
@@ -86,6 +87,7 @@ const mapStateToProps = (state, ownProps) => ({
 	open: ownProps.open,
 	setOpen: ownProps.setOpen,
 	history: ownProps.history,
+	socket: state.canvas.socket
 })
 const mapDispatchToProps = dispatch=>({
 	createCanvas: createCanvas(dispatch)

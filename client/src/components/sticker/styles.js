@@ -85,7 +85,7 @@ export const DetailContainer = styled.div`
   position: absolute;
   top: -5px;
   width: 120px;
-  height: 100px;
+  height: 130px;
   box-shadow: 1px 1px 5px 0px;
   display: ${(props) => props.display};
   flex-direction: column;
