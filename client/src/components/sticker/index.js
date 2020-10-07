@@ -65,7 +65,7 @@ const Sticker = (props) => {
     <Draggable
       axis="both"
       position={{ x: props.x, y: props.y }}
-      grid={[25, 25]}
+      // grid={[25, 25]}
       scale={1}
       disabled={props.isLocked ? true : isEditing ? true : false}
       bounds="parent"
