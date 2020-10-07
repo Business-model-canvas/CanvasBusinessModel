@@ -6,6 +6,7 @@ export const Container = styled.div`
   border-radius: 5px;
   background-color: ${(props) => props.background};
   /* border: ${(props) => props.border}; */
+  overflow: hidden;
   cursor: pointer;
   align-items: center;
   justify-content: center;
