@@ -1,7 +1,7 @@
 const funcS = () => {
 	switch(process.env.NODE_ENV) {
 		case 'production':
-			return ""
+			return "http://localhost:8080"
 		case 'development':
 			return "http://localhost:8080"
 		default:

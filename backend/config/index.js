@@ -3,11 +3,11 @@ require('dotenv').config()
 const origin = () => {
 		switch (process.env.NODE_ENV) {
 		case "production":
-			return "http://trelloforest.herokuapp.com"
+			return "https://onlinebusinessboard.herokuapp.com"
 		case "development":
-		 	return "http://localhost:3000"
+		 	return "http://localhost:8080"
 		default:
-			return "http://localhost:3000"
+			return "http://localhost:8080"
 		}
 	}
 const googleInfo = () => {

@@ -32,10 +32,14 @@ const Dashboard = ({socket, auth, canvas, history, logoutUser, readCanvas, setCu
 	return (
 		<>
 			<WelcomeMsg>Welcome {auth.user.username}!</WelcomeMsg>
+			
+			<AddBtn className="btn btn-primary" onClick={handleClick}><AddIcon /> Add new</AddBtn>
+			<AddBtn className="btn btn-danger" onClick={handleLogout}><ExitToAppIcon /> Log out</AddBtn>
+			<SimpleModal open={open} setOpen={setOpen} history={history} />
 			{
 				// console.log('canvas = ', canvas)
 				canvas.canvas.map(item => {
-					return (<p key={item.id}>
+					return (<CanvasItem><p key={item.id}>
 						<a onClick={()=>{
 							console.log('clicked = ', item);
 							setCurCanvas(item.id);
@@ -43,12 +47,9 @@ const Dashboard = ({socket, auth, canvas, history, logoutUser, readCanvas, setCu
 						}} >
 							{item.name}
 						</a>
-					</p>);
+					</p></CanvasItem>);
 				})
 			}
-			<AddBtn className="btn btn-primary" onClick={handleClick}><AddIcon /> Add new</AddBtn>
-			<AddBtn className="btn btn-danger" onClick={handleLogout}><ExitToAppIcon /> Log out</AddBtn>
-			<SimpleModal open={open} setOpen={setOpen} history={history} />
 		</>
 		)
 }
@@ -66,5 +67,11 @@ const mapDispatchToProps = dispatch => ({
   setCurCanvas: setCurCanvas(dispatch)
 })
 const WelcomeMsg = styled.h1`
+`
+export const CanvasItem = styled.div`
+  border: 1px solid gray;
+  padding: 20px;
+  width: 90%;
+  margin: 0 auto;
 `
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
