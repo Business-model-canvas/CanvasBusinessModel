@@ -6,7 +6,6 @@ export const Container = styled.div`
   border-radius: 5px;
   background-color: ${(props) => props.background};
   /* border: ${(props) => props.border}; */
-  overflow: hidden;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -134,4 +133,13 @@ export const EditDescription = styled.textarea`
   width: 80%;
   align-self: center;
   resize: none;
+`;
+
+export const ContentContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

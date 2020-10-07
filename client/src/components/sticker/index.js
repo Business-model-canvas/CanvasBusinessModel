@@ -15,7 +15,8 @@ import {
   Spliter,
   SizeItem,
   EditTitle,
-  EditDescription
+  EditDescription,
+  ContentContainer
 } from "./styles";
 
 const Sticker = (props) => {
@@ -58,7 +59,7 @@ const Sticker = (props) => {
     props.onMove(
       props.id,
       e.clientX - offset.x,
-      e.clientY - offset.y + props.id * 70 + 103
+      e.clientY - offset.y + props.id * 70 + 100
     );
   };
 
@@ -345,7 +346,9 @@ const Sticker = (props) => {
             }}
           />
         ) : (
-          <span>{content}</span>
+          <ContentContainer>
+            <span style={{width: '100%', textAlign: 'center', verticalAlign: 'middle'}}>{content}</span>
+          </ContentContainer>
         )}
       </Container>
     </Draggable>

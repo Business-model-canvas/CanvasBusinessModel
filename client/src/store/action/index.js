@@ -62,13 +62,13 @@ export const readCurCanvasData = dispatch => (data) => {
 
 export const setPlaceholders = dispatch => (data) => {
     const state = store.getState();
+    dispatch({
+        type: actionTypes.SET_PLACEHOLDERS,
+        payload: data.data
+    })
     axios
     .post(`${SERVER_PORT}/apis/canvas/update_data`, data)
     .then(res=>{
-        dispatch({
-            type: actionTypes.SET_PLACEHOLDERS,
-            payload: res.data
-        })
         state.canvas.socket.emit("reload_placeholders");
     })
     .catch(err=>console.log(err))
