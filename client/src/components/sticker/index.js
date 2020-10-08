@@ -15,7 +15,8 @@ import {
   Spliter,
   SizeItem,
   EditTitle,
-  EditDescription
+  EditDescription,
+  ContentContainer
 } from "./styles";
 
 const Sticker = (props) => {
@@ -48,16 +49,17 @@ const Sticker = (props) => {
   const handleStart = (e) => {
     setBorder("1px solid #00ff00");
     setShowMenu(true);
-    setOffset({ x: e.screenX - props.x, y: e.screenY - props.y });
+    setOffset({ x: e.clientX - props.x, y: e.clientY - props.y });
     props.setOrder(props.id);
   };
   const handleDrag = () => {};
   const handleStop = (e) => {
+    console.log("down point = ", e);
     setBorder("");
     props.onMove(
       props.id,
-      e.x - offset.x,
-      e.y - offset.y + props.id * 70 + 203
+      e.clientX - offset.x,
+      e.clientY - offset.y + props.id * 70 + 100
     );
   };
 
@@ -344,7 +346,9 @@ const Sticker = (props) => {
             }}
           />
         ) : (
-          <span>{content}</span>
+          <ContentContainer>
+            <span style={{width: '100%', textAlign: 'center', verticalAlign: 'middle'}}>{content}</span>
+          </ContentContainer>
         )}
       </Container>
     </Draggable>
