@@ -2,8 +2,6 @@ import React from "react"
 import queryString from "query-string"
 import setAuthToken from "../utils/setAuthToken"
 import jwt_decode from "jwt-decode";
-import jwt from "jsonwebtoken"
-import isEmpty from 'is-empty'
 import store from "../store"
 import {setCurrentUser} from "../store/action";
 
@@ -32,7 +30,6 @@ const LandingPage = props => {
 	      props.history.push("login")
 
 		}, [])
-	console.log("props", props)
 	return(
 		<div>
 		ahahha

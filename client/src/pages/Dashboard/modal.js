@@ -1,13 +1,17 @@
 import React from 'react';
 import Modal from '@material-ui/core/Modal';
-import styled from "styled-components";
 import isEmpty from 'is-empty';
-import {createCanvas} from "../store/action";
+import {createCanvas} from "../../store/action";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {ModelContent, FromGroup, Label, Input, ErrSpan, Select, BtnSection, CancelBtn, CreateBtn, Option} from "../elements/Modal";
+import {ModelContent, FromGroup, Label, Input, ErrSpan, Select, BtnSection, CancelBtn, CreateBtn, Option} from "./styles";
+import {useSelector, useDispatch} from "react-redux"
+import { useHistory } from "react-router-dom";
 
-const SimpleModal = ({socket, open, setOpen, history, createCanvas}) => {
+const SimpleModal = ({open, setOpen}) => {
+
+	const dispatch = useDispatch()
+	const socket = useSelector(state=>state.canvas.socket)
+	const history = useHistory()
 	const [formVal, setFormVal] = React.useState({
 		name: "",
 		type: ""
@@ -41,7 +45,7 @@ const SimpleModal = ({socket, open, setOpen, history, createCanvas}) => {
 	    	console.log("---", history, typeof history)
 			history.push(`/canvas${formVal.type}/${formVal.name}`)
 			socket.emit('sendMessage', 'Message');
-	    	createCanvas(formVal);
+			dispatch(createCanvas(formVal))
 	    }
 	}
 	return (
@@ -76,20 +80,4 @@ const SimpleModal = ({socket, open, setOpen, history, createCanvas}) => {
 		)
 }
 
-
-SimpleModal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
-  createCanvas: PropTypes.func.isRequired
-};
-
-const mapStateToProps = (state, ownProps) => ({
-	open: ownProps.open,
-	setOpen: ownProps.setOpen,
-	history: ownProps.history,
-	socket: state.canvas.socket
-})
-const mapDispatchToProps = dispatch=>({
-	createCanvas: createCanvas(dispatch)
-})
-export default connect(mapStateToProps, mapDispatchToProps)(SimpleModal);
+export default SimpleModal

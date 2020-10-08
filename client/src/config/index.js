@@ -1,11 +1,11 @@
 const funcS = () => {
 	switch(process.env.NODE_ENV) {
 		case 'production':
-			return "http://localhost:8080"
+			return "https://onlinebusinessmodel.herokuapp.com"
 		case 'development':
 			return "http://localhost:8080"
 		default:
-			return ""
+			return "https://onlinebusinessmodel.herokuapp.com"
 	}
 }
 // export SERVER_PORT;

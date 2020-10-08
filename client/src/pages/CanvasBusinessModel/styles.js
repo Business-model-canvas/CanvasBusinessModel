@@ -1,6 +1,44 @@
 import styled from "styled-components";
 
+export const CompoContainer = styled.div`
+  border: 1px solid #cdcdcd;
+  flex: 1;
+`;
+
+export const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+`;
+
+export const HeaderText = styled.a`
+  font-size: 12px;
+  margin-left: 5px;
+`;
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 120vh;
+  height: 90vh;
+  position: relative;
+  margin: 5rem;
+`;
+
+export const RowContainer = styled.div`
+  display: flex;
+  flex: ${(props) => (props.rows ? props.rows : 1)};
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+`;
+
+export const ColumnContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+`;
+export const StickerContainer = styled.div`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   border-radius: 5px;

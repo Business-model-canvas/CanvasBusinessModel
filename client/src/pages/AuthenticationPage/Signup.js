@@ -1,24 +1,31 @@
 import React from "react";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from 'is-empty'
-import {connect} from "react-redux";
 import Notifications, {notify} from 'react-notify-toast';
-import {CardHeader, CardForm, CardBody, Label, Input, Button, InnerContainer, Select, WarningSpan} from '../elements/Form'
-import {ButtonLoader} from "../components/SpinnerLoader"
-import styled from "styled-components"
-import {CreateBtn} from "../elements/Modal";
-import {signupUser} from "../store/action"
+import {SignUpWrapper, CardHeader, CardForm, CardBody, Label, Input, WarningSpan, CreateBtn} from './styles'
+import ClipLoader from "react-spinners/ClipLoader";
+import {signupUser} from "../../store/action"
+import {useSelector, useDispatch} from "react-redux"
+import { useHistory } from "react-router-dom";
 
 
-const Signup = ({signupUser}) => {
+const Signup = () => {
 	const [signupParam, setSignupParam] = React.useState({})
 	const [signupErrors, setSignupErrors] = React.useState({})
 	const [btnFlag, setBtnFlag] = React.useState(false)
-	// React.useEffect(()=>{
-	// 	if (auth.isAuthenticated) {
-	// 		history.push("/dashboard")
-	// 	}
-	// },[])
+	const history = useHistory();
+	const dispatch = useDispatch()
+	const auth = useSelector(state=>state.auth)
+	React.useEffect(()=>{
+		if (auth.isAuthenticated) {
+			history.push("/dashboard")
+		}
+	},[])
+	React.useEffect(()=>{
+		notify.show(auth.message)
+	}, [auth.message])
+
+
 	const handleChange = e => {
 	    setSignupParam({
 	      ...signupParam,
@@ -54,15 +61,14 @@ const Signup = ({signupUser}) => {
 	      })
 	    } else {
 	    	console.log("signupParam", signupParam)
-	    	signupUser(signupParam)
-	      // setBtnFlag(true)
-	      // await signupUser(signupParam, signProfileData, setAlert, setSignupErrors, errVal, lang)
-	      // setBtnFlag(false)
+	    	setBtnFlag(true)
+	    	dispatch(signupUser(signupParam, setBtnFlag))
 	    }
 	}
 
 	return (
 		<SignUpWrapper>
+			<Notifications />
               <CardForm>
                 <CardHeader className="card-header">
                   Sign Up
@@ -80,9 +86,9 @@ const Signup = ({signupUser}) => {
                     <Label>Confirm Password {signupErrors.password2 && (<WarningSpan>{signupErrors.password2}</WarningSpan>)}</Label>
                     <Input type='password' id="password2" className="form-control" onChange={handleChange} error={signupErrors.password2 && true} />
                     <p><a href="/login">Click here</a> to Log In</p>
-                  <center><CreateBtn type="submit" className="btn btn-success" onClick={handleClick}>{
+                  <center><CreateBtn type="submit" className="btn btn-outline-dark btn-block mb-2" onClick={handleClick}>{
                     btnFlag
-                    ? <ButtonLoader />
+                    ? <ClipLoader />
                     : "Sign Up"
                   }</CreateBtn></center>
 
@@ -92,12 +98,5 @@ const Signup = ({signupUser}) => {
 		)
   }
 
-const SignUpWrapper = styled.div`
-	max-width: 400px;
-	margin: 3rem auto;
-`
 
-const mapDispatchToProps = dispatch => ({
-  signupUser: signupUser(dispatch),
-})
-export default connect(null, mapDispatchToProps)(Signup);
+export default Signup

@@ -39,12 +39,12 @@ app.use('/', google)
 
 
 // index path
-app.use('/', express.static(path.resolve(__dirname, './build')));
+// app.use('/', express.static(path.resolve(__dirname, './build')));
 
-app.get('*', function(req, res) {
-    res.sendFile(path.resolve(__dirname, './build/index.html'));
-    res.end();
-});
+// app.get('*', function(req, res) {
+//     res.sendFile(path.resolve(__dirname, './build/index.html'));
+//     res.end();
+// });
 // app.get('/', function(req, res){
 //     console.log('app listening on port: '+port+process.env.NODE_ENV);
 //     res.sendFile(path.join(__dirname, '../client/build/index.html'));

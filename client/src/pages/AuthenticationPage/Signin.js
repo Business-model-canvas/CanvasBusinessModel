@@ -1,40 +1,45 @@
 import React from 'react'
 import isEmpty from 'is-empty'
 import isEmail from "validator/lib/isEmail";
-import {connect} from "react-redux"
 import styled from "styled-components"
-import {CardHeader, CardForm, CardBody, Label, Input, Button, InnerContainer, WarningSpan} from '../elements/Form'
-import {CreateBtn} from "../elements/Modal";
-import {ButtonLoader} from "../components/SpinnerLoader"
-import {loginUser} from "../store/action"
-import {SERVER_PORT} from "../config"
-import setAuthToken from "../utils/setAuthToken"
+import {CardHeader, CardForm, CardBody, Label, Input, WarningSpan, CreateBtn} from './styles'
+import ClipLoader from "react-spinners/ClipLoader";
+import {loginUser, setCurrentUser} from "../../store/action"
+import {SERVER_PORT} from "../../config"
+import setAuthToken from "../../utils/setAuthToken"
 import jwt_decode from "jwt-decode";
-import {setCurrentUser} from "../store/action";
-import store from "../store"
+import {useSelector, useDispatch} from "react-redux"
+import { useHistory } from "react-router-dom";
+import Notifications, {notify} from 'react-notify-toast';
 
-const Signin = ({auth, loginUser, history}) => {
+const Signin = () => {
 
 	const [btnFlag, setBtnFlag] = React.useState(false)
 	const [loginErrors, setLoginErrors] = React.useState({})
 	const [loginParam, setLoginParam] = React.useState({})
-
+	const dispatch = useDispatch()
+	const history = useHistory();
+	const auth = useSelector(state=>state.auth)
 	React.useEffect(()=>{
 		const token = localStorage.getItem("jwtToken")
-		if (token) {
+		if (auth.isAuthenticated) {
+			history.push("/dashboard")
+		} else if (token) {
 			setAuthToken(token);
 			const decoded = jwt_decode(token);
-			store.dispatch(setCurrentUser(decoded))
-		    // props.history.push(`dashboard`);
+			dispatch(setCurrentUser(decoded))
+			history.push("/dashboard")
 		}
-		
-	}, [])
+	},[])
+
 	React.useEffect(()=>{
 		if (auth.isAuthenticated) {
 			history.push("dashboard")
 		}
 	}, [auth.isAuthenticated])
-
+	React.useEffect(()=>{
+		notify.show(auth.loginmsg)
+	}, [auth.loginmsg])
 
 	const handleChange = e => { 
 	    setLoginParam({
@@ -57,16 +62,14 @@ const Signin = ({auth, loginUser, history}) => {
 	        email: "No Validate E-mail"
 	      })
 	    } else {
-	    	console.log("loginParam", loginParam)
-	    	loginUser(loginParam)
-	      // setBtnFlag(true)
-	      // await loginUser(loginParam, setAlert, setLoginErrors, lang, errVal, history, visit_url)
-	      // setBtnFlag(false)
+	    	setBtnFlag(true)
+	    	dispatch(loginUser(loginParam, setBtnFlag))
 	    }
 	    
 	}
 	return (
 		<SignInWrapper>
+		<Notifications />
                   <CardForm>
                   <CardHeader className="card-header">
                     Login
@@ -77,9 +80,9 @@ const Signin = ({auth, loginUser, history}) => {
                     <Label>Password {loginErrors.password && (<WarningSpan>{loginErrors.password}</WarningSpan>)}</Label>
                     <Input type='password' id="password" className="form-control" onChange={handleChange} />
                     <p><a href="/signup">Click here</a> to Sign Up</p>
-                    <center><CreateBtn type="button" className="btn btn-success" onClick={handleClick}>{
+                    <center><CreateBtn type="button" className="btn btn-outline-dark btn-block mb-2" onClick={handleClick}>{
                     btnFlag
-                    ? <ButtonLoader />
+                    ? <ClipLoader />
                     : "Login"
                   }
                     </CreateBtn></center>
@@ -94,11 +97,5 @@ const SignInWrapper = styled.div`
 	max-width: 400px;
 	margin: 3rem auto;
 `
-const mapStateToProps = (state, ownProps)=>({
-	auth: state.auth,
-	history: ownProps.history,
-});
-const mapDispatchToProps = dispatch => ({
-  loginUser: loginUser(dispatch),
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Signin);
+
+export default Signin

@@ -11,7 +11,8 @@ const passport = require('../passport');
 const jwt = require("jsonwebtoken")
 
 router.post('/registration', function(req, res){
-    User.findOne({ "useremail": req.body.email })
+  console.log("registration calling", req.body)
+    User.findOne({where: { useremail: req.body.email}})
     .then(user=> {
         if (!user) {
             const newUser = new User({

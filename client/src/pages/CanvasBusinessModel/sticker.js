@@ -3,7 +3,7 @@ import Draggable from "react-draggable";
 import { Edit, MoreHoriz } from "@material-ui/icons";
 
 import {
-  Container,
+  StickerContainer,
   TextInput,
   MenuBar,
   MenuItem,
@@ -75,7 +75,7 @@ const Sticker = (props) => {
       onDrag={handleDrag}
       onStop={handleStop}
     >
-      <Container
+      <StickerContainer
         width={20 * props.size}
         height={20 * props.size}
         background={background}
@@ -350,7 +350,7 @@ const Sticker = (props) => {
             <span style={{width: '100%', textAlign: 'center', verticalAlign: 'middle'}}>{content}</span>
           </ContentContainer>
         )}
-      </Container>
+      </StickerContainer>
     </Draggable>
   );
 };

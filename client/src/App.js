@@ -1,11 +1,11 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import PrivateRoute from "./components/PrivateRoute"
+import PrivateRoute from "./utils/PrivateRoute"
 import DashboardPage from "./pages/Dashboard";
 import CanvasBusinessModel from "./pages/CanvasBusinessModel";
-import SignIn from "./pages/Signin";
-import SignUp from "./pages/Signup";
-import EmailConfirm from "./pages/EmailConfirm";
+import SignIn from "./pages/AuthenticationPage/Signin";
+import SignUp from "./pages/AuthenticationPage/Signup";
+import EmailConfirm from "./pages/AuthenticationPage/EmailConfirm";
 import LandingPage from "./pages/LandingPage"
 
 function App() {

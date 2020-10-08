@@ -7,7 +7,7 @@ const origin = () => {
 		case "development":
 		 	return "http://localhost:8080"
 		default:
-			return "http://localhost:8080"
+			return "http://localhost:3000"
 		}
 	}
 const googleInfo = () => {

@@ -27,12 +27,16 @@ export const CancelBtn = styled.button`
 export const CreateBtn = styled.button`
 
 `
-export const AddBtn = styled.button`
+export const AddBtn = styled.button.attrs({
+	className: "btn btn-primary"
+})`
   padding: 10px 20px;
   color: white;
   margin: 20px;
 `
-export const LogoutBtn = styled.button`
+export const LogoutBtn = styled.button.attrs({
+	className: "btn btn-danger"
+})`
 	padding: 10px 20px;
 	color: white;
 	margin: 20px;
@@ -51,4 +55,18 @@ export const ModelContent = styled.div`
 	border: none;
 	border-radius: 5px;
 	padding: 2rem 4rem;
+`
+export const WelcomeMsg = styled.h1`
+`
+export const CanvasItem = styled.div.attrs({
+	className: "mt-4"
+})`
+  border: 1px solid gray;
+  padding: 20px;
+  width: 90%;
+  margin: 0 auto;
+  transition: all .3s;
+  &:hover {
+  	box-shadow: 3px 3px 5px gray;
+  }
 `
