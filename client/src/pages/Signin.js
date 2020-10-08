@@ -16,7 +16,6 @@ import {
 import { CreateBtn } from "../elements/Modal";
 import { ButtonLoader } from "../components/SpinnerLoader";
 import { loginUser } from "../store/action";
-import { SERVER_PORT } from "../config";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { setCurrentUser } from "../store/action";
